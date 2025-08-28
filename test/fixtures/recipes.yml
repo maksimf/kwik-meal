@@ -1,0 +1,23 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  title: "Test Recipe One"
+  cook_time: 30
+  prep_time: 15
+  ingredients: '["flour", "eggs", "milk"]'
+  ratings: 4.5
+  cuisine: "American"
+  category: "Breakfast"
+  author: "Test Chef"
+  image: "http://example.com/image1.jpg"
+
+two:
+  title: "Test Recipe Two"
+  cook_time: 45
+  prep_time: 20
+  ingredients: '["butter", "sugar", "vanilla"]'
+  ratings: 4.2
+  cuisine: "French"
+  category: "Dessert"
+  author: "Baker"
+  image: "http://example.com/image2.jpg"
