@@ -8,7 +8,7 @@ class RecipesControllerTest < ActionDispatch::IntegrationTest
     # Create test recipes
     @recipe1 = Recipe.create!(
       title: "Chocolate Cake",
-      ingredients: ["flour", "chocolate", "eggs", "sugar"],
+      ingredients: [ "flour", "chocolate", "eggs", "sugar" ],
       cook_time: 45,
       prep_time: 20,
       ratings: 4.5,
@@ -18,7 +18,7 @@ class RecipesControllerTest < ActionDispatch::IntegrationTest
 
     @recipe2 = Recipe.create!(
       title: "Vanilla Cookies",
-      ingredients: ["flour", "vanilla", "butter", "sugar"],
+      ingredients: [ "flour", "vanilla", "butter", "sugar" ],
       cook_time: 25,
       prep_time: 15,
       ratings: 4.2,
@@ -28,7 +28,7 @@ class RecipesControllerTest < ActionDispatch::IntegrationTest
 
     @recipe3 = Recipe.create!(
       title: "Beef Stew",
-      ingredients: ["beef", "carrots", "potatoes", "onions"],
+      ingredients: [ "beef", "carrots", "potatoes", "onions" ],
       cook_time: 120,
       prep_time: 30,
       ratings: 4.8,
@@ -38,7 +38,7 @@ class RecipesControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should search recipes by single ingredient" do
-    get search_recipes_path, params: { ingredients: ["flour"] }
+    get search_recipes_path, params: { ingredients: [ "flour" ] }
 
     assert_response :success
 
@@ -54,13 +54,13 @@ class RecipesControllerTest < ActionDispatch::IntegrationTest
 
     # Check metadata
     metadata = json_response["search_metadata"]
-    assert_equal ["flour"], metadata["query_ingredients"]
+    assert_equal [ "flour" ], metadata["query_ingredients"]
     assert metadata["search_time_ms"].present?
     assert_equal 2, metadata["total_results"]
   end
 
   test "should search recipes by multiple ingredients" do
-    get search_recipes_path, params: { ingredients: ["flour", "sugar"] }
+    get search_recipes_path, params: { ingredients: [ "flour", "sugar" ] }
 
     assert_response :success
 
@@ -95,7 +95,7 @@ class RecipesControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should return error for empty ingredients" do
-    get search_recipes_path, params: { ingredients: [""] }
+    get search_recipes_path, params: { ingredients: [ "" ] }
 
     assert_response :bad_request
 
@@ -104,7 +104,7 @@ class RecipesControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should limit search results" do
-    get search_recipes_path, params: { ingredients: ["flour"], limit: 1 }
+    get search_recipes_path, params: { ingredients: [ "flour" ], limit: 1 }
 
     assert_response :success
 
@@ -114,7 +114,7 @@ class RecipesControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should handle typos in ingredients" do
-    get search_recipes_path, params: { ingredients: ["chocolat"] } # missing 'e'
+    get search_recipes_path, params: { ingredients: [ "chocolat" ] } # missing 'e'
 
     assert_response :success
 
@@ -126,7 +126,7 @@ class RecipesControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should return recipes ordered by rating" do
-    get search_recipes_path, params: { ingredients: ["flour"] }
+    get search_recipes_path, params: { ingredients: [ "flour" ] }
 
     assert_response :success
 
@@ -138,7 +138,7 @@ class RecipesControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should include all recipe fields in response" do
-    get search_recipes_path, params: { ingredients: ["chocolate"] }
+    get search_recipes_path, params: { ingredients: [ "chocolate" ] }
 
     assert_response :success
 
@@ -153,33 +153,5 @@ class RecipesControllerTest < ActionDispatch::IntegrationTest
     assert recipe["ratings"].present?
     assert recipe["category"].present?
     assert recipe["author"].present?
-  end
-
-  test "should get recipes index with pagination" do
-    get recipes_path
-
-    assert_response :success
-
-    json_response = JSON.parse(response.body)
-    assert json_response["results"].present?
-    assert json_response["pagination"].present?
-
-    pagination = json_response["pagination"]
-    assert_equal 1, pagination["current_page"]
-    assert_equal 10, pagination["per_page"]
-    assert pagination["total_pages"].present?
-    assert pagination["total_count"].present?
-  end
-
-  test "should handle pagination parameters" do
-    get recipes_path, params: { page: 2, per_page: 5 }
-
-    assert_response :success
-
-    json_response = JSON.parse(response.body)
-    pagination = json_response["pagination"]
-
-    assert_equal 2, pagination["current_page"]
-    assert_equal 5, pagination["per_page"]
   end
 end

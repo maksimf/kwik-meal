@@ -4,7 +4,7 @@ class RecipeTest < ActiveSupport::TestCase
   test "should create recipe with valid attributes" do
     recipe = Recipe.new(
       title: "Test Recipe",
-      ingredients: ["flour", "eggs", "milk"],
+      ingredients: [ "flour", "eggs", "milk" ],
       cook_time: 30,
       prep_time: 15,
       ratings: 4.5,
@@ -16,7 +16,7 @@ class RecipeTest < ActiveSupport::TestCase
   end
 
   test "should require title" do
-    recipe = Recipe.new(ingredients: ["flour"])
+    recipe = Recipe.new(ingredients: [ "flour" ])
     assert_not recipe.valid?
     assert_includes recipe.errors[:title], "can't be blank"
   end
@@ -28,7 +28,7 @@ class RecipeTest < ActiveSupport::TestCase
   end
 
   test "should serialize ingredients as JSON" do
-    ingredients = ["1 cup flour", "2 eggs", "1 cup milk"]
+    ingredients = [ "1 cup flour", "2 eggs", "1 cup milk" ]
     recipe = Recipe.create!(
       title: "Test Recipe",
       ingredients: ingredients
@@ -46,36 +46,36 @@ class RecipeTest < ActiveSupport::TestCase
     # Create test recipes
     recipe1 = Recipe.create!(
       title: "Chocolate Cake",
-      ingredients: ["flour", "chocolate", "eggs", "sugar"],
+      ingredients: [ "flour", "chocolate", "eggs", "sugar" ],
       ratings: 4.5
     )
 
     recipe2 = Recipe.create!(
       title: "Vanilla Cookies",
-      ingredients: ["flour", "vanilla", "butter", "sugar"],
+      ingredients: [ "flour", "vanilla", "butter", "sugar" ],
       ratings: 4.2
     )
 
     recipe3 = Recipe.create!(
       title: "Beef Stew",
-      ingredients: ["beef", "carrots", "potatoes", "onions"],
+      ingredients: [ "beef", "carrots", "potatoes", "onions" ],
       ratings: 4.8
     )
 
     # Search for recipes with flour
-    results = Recipe.find_by_ingredients(["flour"])
+    results = Recipe.find_by_ingredients([ "flour" ])
     assert_includes results, recipe1
     assert_includes results, recipe2
     assert_not_includes results, recipe3
 
     # Search for recipes with chocolate
-    results = Recipe.find_by_ingredients(["chocolate"])
+    results = Recipe.find_by_ingredients([ "chocolate" ])
     assert_includes results, recipe1
     assert_not_includes results, recipe2
     assert_not_includes results, recipe3
 
     # Search for recipes with beef
-    results = Recipe.find_by_ingredients(["beef"])
+    results = Recipe.find_by_ingredients([ "beef" ])
     assert_includes results, recipe3
     assert_not_includes results, recipe1
     assert_not_includes results, recipe2
@@ -86,15 +86,15 @@ class RecipeTest < ActiveSupport::TestCase
 
     recipe = Recipe.create!(
       title: "Chocolate Cake",
-      ingredients: ["flour", "chocolate", "eggs"],
+      ingredients: [ "flour", "chocolate", "eggs" ],
       ratings: 4.5
     )
 
     # Test with slight typos
-    results = Recipe.find_by_ingredients(["chocolat"]) # missing 'e'
+    results = Recipe.find_by_ingredients([ "chocolat" ]) # missing 'e'
     assert_includes results, recipe
 
-    results = Recipe.find_by_ingredients(["choclat"]) # missing 'o'
+    results = Recipe.find_by_ingredients([ "choclat" ]) # missing 'o'
     assert_includes results, recipe
   end
 
@@ -108,7 +108,7 @@ class RecipeTest < ActiveSupport::TestCase
     results = Recipe.find_by_ingredients(nil)
     assert_empty results
 
-    results = Recipe.find_by_ingredients([""])
+    results = Recipe.find_by_ingredients([ "" ])
     assert_empty results
   end
 
@@ -117,30 +117,30 @@ class RecipeTest < ActiveSupport::TestCase
 
     recipe1 = Recipe.create!(
       title: "Low Rated Recipe",
-      ingredients: ["flour", "eggs"],
+      ingredients: [ "flour", "eggs" ],
       ratings: 2.0
     )
 
     recipe2 = Recipe.create!(
       title: "High Rated Recipe",
-      ingredients: ["flour", "sugar"],
+      ingredients: [ "flour", "sugar" ],
       ratings: 5.0
     )
 
     recipe3 = Recipe.create!(
       title: "Medium Rated Recipe",
-      ingredients: ["flour", "milk"],
+      ingredients: [ "flour", "milk" ],
       ratings: 3.5
     )
 
-    results = Recipe.find_by_ingredients(["flour"]).to_a
-    assert_equal [recipe2, recipe3, recipe1], results
+    results = Recipe.find_by_ingredients([ "flour" ]).to_a
+    assert_equal [ recipe2, recipe3, recipe1 ], results
   end
 
   test "should clean ingredient list" do
     recipe = Recipe.create!(
       title: "Test Recipe",
-      ingredients: ["1 cup all-purpose flour", "2 large eggs", "½ cup sugar"]
+      ingredients: [ "1 cup all-purpose flour", "2 large eggs", "½ cup sugar" ]
     )
 
     cleaned = recipe.ingredient_list

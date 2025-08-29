@@ -8,12 +8,12 @@ puts ""
 
 # Test different search scenarios
 test_cases = [
-  { name: "Single common ingredient", ingredients: ["flour"] },
-  { name: "Single specific ingredient", ingredients: ["chocolate"] },
-  { name: "Multiple ingredients", ingredients: ["flour", "eggs", "sugar"] },
-  { name: "Ingredient with typo", ingredients: ["chocolat"] },
-  { name: "Less common ingredient", ingredients: ["vanilla"] },
-  { name: "Multiple specific ingredients", ingredients: ["beef", "carrots", "onions"] }
+  { name: "Single common ingredient", ingredients: [ "flour" ] },
+  { name: "Single specific ingredient", ingredients: [ "chocolate" ] },
+  { name: "Multiple ingredients", ingredients: [ "flour", "eggs", "sugar" ] },
+  { name: "Ingredient with typo", ingredients: [ "chocolat" ] },
+  { name: "Less common ingredient", ingredients: [ "vanilla" ] },
+  { name: "Multiple specific ingredients", ingredients: [ "beef", "carrots", "onions" ] }
 ]
 
 test_cases.each do |test_case|

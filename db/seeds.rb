@@ -32,7 +32,7 @@ failed = 0
 puts "Processing in batches of #{batch_size}..."
 
 recipes_data.each_slice(batch_size).with_index do |batch, batch_index|
-  puts "Processing batch #{batch_index + 1}/#{total_batches} (records #{processed + 1}-#{[processed + batch_size, recipes_data.length].min})"
+  puts "Processing batch #{batch_index + 1}/#{total_batches} (records #{processed + 1}-#{[ processed + batch_size, recipes_data.length ].min})"
 
   recipes_to_insert = []
 

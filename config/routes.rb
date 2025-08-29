@@ -6,7 +6,7 @@ Rails.application.routes.draw do
   get "up" => "rails/health#show", as: :rails_health_check
 
   # API routes
-  resources :recipes, only: [:index] do
+  resources :recipes, only: [] do
     collection do
       get :search
     end

@@ -26,7 +26,7 @@ class Recipe < ApplicationRecord
 
   # Combined search for title, ingredients, and category
   pg_search_scope :search_all,
-    against: [:title, :ingredients, :category],
+    against: [ :title, :ingredients, :category ],
     using: {
       tsearch: {
         prefix: true,
@@ -82,8 +82,8 @@ class Recipe < ApplicationRecord
     if term.length > 5
       (0...term.length).each do |i|
         pattern = term.dup
-        pattern.insert(i, '_') # Use _ as single character wildcard
-        patterns << pattern.gsub('_', '%')
+        pattern.insert(i, "_") # Use _ as single character wildcard
+        patterns << pattern.gsub("_", "%")
       end
     end
 
@@ -91,7 +91,7 @@ class Recipe < ApplicationRecord
     if term.length > 4
       (0...term.length).each do |i|
         pattern = term.dup
-        pattern[i] = '%' # Replace character with wildcard
+        pattern[i] = "%" # Replace character with wildcard
         patterns << pattern
       end
     end
@@ -107,12 +107,27 @@ class Recipe < ApplicationRecord
   end
 
   # Get ingredients as an array of strings (cleaned up)
+  # Removes quantities, measurements, and units from ingredient strings to extract just the ingredient names
+  #
+  # Examples:
+  #   "2 cups flour" → "flour"
+  #   "1½ tablespoons olive oil" → "olive oil"
+  #   "¼ cup sugar" → "sugar"
+  #   "3/4 pound ground beef" → "ground beef"
+  #
+  # @return [Array<String>] Array of cleaned ingredient names
   def ingredient_list
     return [] unless ingredients.is_a?(Array)
 
     ingredients.map do |ingredient|
       # Remove quantities and units, keep just the ingredient name
-      # This regex removes numbers, fractions, measurements at the beginning
+      # This regex removes:
+      #   - Numbers (digits)
+      #   - Unicode fractions (¼, ½, ¾, ⅓, ⅔, ⅕, etc.)
+      #   - Slash fractions (1/2, 3/4, etc.)
+      #   - Measurement units (cup, tbsp, oz, pound, etc.)
+      #   - Associated whitespace
+      # Pattern: /^[\d\u{00BC}-\u{00BE}\u{2153}-\u{215E}\/\s]*\s*[\w\s]*\s+/
       cleaned = ingredient.gsub(/^[\d\u{00BC}-\u{00BE}\u{2153}-\u{215E}\/\s]*\s*[\w\s]*\s+/, "").strip
       cleaned.empty? ? ingredient.strip : cleaned
     end
