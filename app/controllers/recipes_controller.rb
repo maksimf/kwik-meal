@@ -1,22 +1,23 @@
 class RecipesController < ApplicationController
-  before_action :set_default_response_format
+  INGREDIENTS_LIMIT = 50
 
-  # GET /recipes/search
-  # Search recipes by ingredients
-  # Parameters:
-  #   ingredients: array of ingredient names (required)
-  #   limit: number of results to return (optional, default: 10)
   def search
     ingredients = validate_and_normalize_ingredients
-    return if performed? # Early return if validation failed and response was already rendered
+    return if performed?
 
-    limit = parse_limit_param
+    limit = params[:limit] ? params[:limit].to_i : INGREDIENTS_LIMIT
     recipes, search_time = perform_recipe_search(ingredients, limit)
 
-    render json: build_search_response(recipes, ingredients, search_time, limit)
+    render json: {
+      results: recipes.map { |recipe| serialize_recipe(recipe) },
+      search_metadata: {
+        query_ingredients: ingredients,
+        total_results: recipes.length,
+        search_time_ms: search_time,
+        limit: limit
+      }
+    }
   end
-
-
 
   private
 
@@ -28,10 +29,8 @@ class RecipesController < ApplicationController
       return nil
     end
 
-    # Ensure ingredients is an array
     ingredients = [ ingredients ] unless ingredients.is_a?(Array)
 
-    # Remove empty strings and normalize
     ingredients = ingredients.compact.reject(&:blank?)
 
     if ingredients.empty?
@@ -42,49 +41,29 @@ class RecipesController < ApplicationController
     ingredients
   end
 
-  def parse_limit_param
-    limit = [ params[:limit].to_i, 50 ].min # Cap at 50 results
-    limit = 10 if limit <= 0 # Default to 10
-    limit
-  end
-
-  def perform_recipe_search(ingredients, limit)
+  def perform_recipe_search(ingredients, limit = INGREDIENTS_LIMIT)
     start_time = Time.current
-    all_recipes = Recipe.find_by_ingredients(ingredients)
-    recipes = all_recipes.first(limit) # Since find_by_ingredients returns Array, use first() instead of limit()
-    search_time = ((Time.current - start_time) * 1000).round(2) # Convert to milliseconds
+    search_query = ingredients.join(" ")
+    recipes = Recipe.search_by_ingredients(search_query)
+                    .order(ratings: :desc)
+                    .limit(limit)
+    search_time = ((Time.current - start_time) * 1000).round(2)
 
     [ recipes, search_time ]
   end
 
-  def build_search_response(recipes, ingredients, search_time, limit)
-    results = recipes.map do |recipe|
-      {
-        id: recipe.id,
-        title: recipe.title,
-        cook_time: recipe.cook_time,
-        prep_time: recipe.prep_time,
-        ingredients: recipe.ingredients,
-        ratings: recipe.ratings,
-        cuisine: recipe.cuisine,
-        category: recipe.category,
-        author: recipe.author,
-        image: recipe.image
-      }
-    end
-
+  def serialize_recipe(recipe)
     {
-      results: results,
-      search_metadata: {
-        query_ingredients: ingredients,
-        total_results: results.length,
-        search_time_ms: search_time,
-        limit: limit
-      }
+      id: recipe.id,
+      title: recipe.title,
+      cook_time: recipe.cook_time,
+      prep_time: recipe.prep_time,
+      ingredients: recipe.ingredients,
+      ratings: recipe.ratings,
+      cuisine: recipe.cuisine,
+      category: recipe.category,
+      author: recipe.author,
+      image: recipe.image
     }
-  end
-
-  def set_default_response_format
-    request.format = :json
   end
 end
