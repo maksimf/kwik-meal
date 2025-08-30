@@ -48,9 +48,13 @@ class RecipesController < ApplicationController
     start_time = Time.current
 
     recipes = Recipe.search_by_ingredients(search_query)
-                    .order(ratings: :desc)
-                    .limit(limit)
+                    .limit(limit * 2)  # Get more results initially to sort by relevance
                     .to_a  # Force query execution and object instantiation
+
+    # Sort by ingredient match count (relevance) first, then by ratings
+    recipes = recipes.sort_by { |recipe|
+      [-recipe.ingredient_match_count(ingredients), -recipe.ratings.to_f]
+    }.first(limit)
 
     end_time = Time.current
     total_time_ms = (end_time - start_time) * 1000
