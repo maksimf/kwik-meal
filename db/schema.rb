@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_08_28_185609) do
+ActiveRecord::Schema[8.0].define(version: 2025_08_30_105810) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pg_trgm"
@@ -27,7 +27,9 @@ ActiveRecord::Schema[8.0].define(version: 2025_08_28_185609) do
     t.string "image"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index "to_tsvector('english'::regconfig, ingredients)", name: "index_recipes_on_ingredients_tsvector_gin", using: :gin
     t.index ["category"], name: "index_recipes_on_category"
+    t.index ["ingredients"], name: "index_recipes_on_ingredients_gin", opclass: :gin_trgm_ops, using: :gin
     t.index ["ratings"], name: "index_recipes_on_ratings"
     t.index ["title"], name: "index_recipes_on_title"
   end

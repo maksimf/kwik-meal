@@ -41,15 +41,21 @@ class RecipesController < ApplicationController
     ingredients
   end
 
-  def perform_recipe_search(ingredients, limit = INGREDIENTS_LIMIT)
-    start_time = Time.current
+      def perform_recipe_search(ingredients, limit = INGREDIENTS_LIMIT)
     search_query = ingredients.join(" ")
+
+    # Measure total time for database query + ActiveRecord processing + object instantiation
+    start_time = Time.current
+
     recipes = Recipe.search_by_ingredients(search_query)
                     .order(ratings: :desc)
                     .limit(limit)
-    search_time = ((Time.current - start_time) * 1000).round(2)
+                    .to_a  # Force query execution and object instantiation
 
-    [ recipes, search_time ]
+    end_time = Time.current
+    total_time_ms = (end_time - start_time) * 1000
+
+    [ recipes, total_time_ms.round(2) ]
   end
 
   def serialize_recipe(recipe)
