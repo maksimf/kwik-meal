@@ -27,7 +27,7 @@ class Recipe < ApplicationRecord
 
     # Handle both String and Array formats for ingredients
     recipe_ingredients_text = if ingredients.is_a?(Array)
-      ingredients.join(' ').downcase
+      ingredients.join(" ").downcase
     else
       ingredients.to_s.downcase
     end
@@ -36,5 +36,4 @@ class Recipe < ApplicationRecord
       recipe_ingredients_text.include?(term)
     end
   end
-
 end

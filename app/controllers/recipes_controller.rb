@@ -53,7 +53,7 @@ class RecipesController < ApplicationController
 
     # Sort by ingredient match count (relevance) first, then by ratings
     recipes = recipes.sort_by { |recipe|
-      [-recipe.ingredient_match_count(ingredients), -recipe.ratings.to_f]
+      [ -recipe.ingredient_match_count(ingredients), -recipe.ratings.to_f ]
     }.first(limit)
 
     end_time = Time.current

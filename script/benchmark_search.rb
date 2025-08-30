@@ -43,25 +43,25 @@ end
 # Test cases for 1-4 ingredients
 test_cases = [
   # Single ingredient tests
-  { name: "1 ingredient (common)", ingredients: ["flour"] },
-  { name: "1 ingredient (specific)", ingredients: ["chocolate"] },
-  { name: "1 ingredient (rare)", ingredients: ["saffron"] },
-  { name: "1 ingredient (typo)", ingredients: ["chocolat"] },
+  { name: "1 ingredient (common)", ingredients: [ "flour" ] },
+  { name: "1 ingredient (specific)", ingredients: [ "chocolate" ] },
+  { name: "1 ingredient (rare)", ingredients: [ "saffron" ] },
+  { name: "1 ingredient (typo)", ingredients: [ "chocolat" ] },
 
   # Two ingredients tests
-  { name: "2 ingredients (common)", ingredients: ["flour", "sugar"] },
-  { name: "2 ingredients (mixed)", ingredients: ["chicken", "rice"] },
-  { name: "2 ingredients (specific)", ingredients: ["chocolate", "butter"] },
+  { name: "2 ingredients (common)", ingredients: [ "flour", "sugar" ] },
+  { name: "2 ingredients (mixed)", ingredients: [ "chicken", "rice" ] },
+  { name: "2 ingredients (specific)", ingredients: [ "chocolate", "butter" ] },
 
   # Three ingredients tests
-  { name: "3 ingredients (baking)", ingredients: ["flour", "eggs", "sugar"] },
-  { name: "3 ingredients (savory)", ingredients: ["beef", "onions", "garlic"] },
-  { name: "3 ingredients (mixed)", ingredients: ["chicken", "lemon", "herbs"] },
+  { name: "3 ingredients (baking)", ingredients: [ "flour", "eggs", "sugar" ] },
+  { name: "3 ingredients (savory)", ingredients: [ "beef", "onions", "garlic" ] },
+  { name: "3 ingredients (mixed)", ingredients: [ "chicken", "lemon", "herbs" ] },
 
   # Four ingredients tests
-  { name: "4 ingredients (complex)", ingredients: ["flour", "eggs", "milk", "butter"] },
-  { name: "4 ingredients (dinner)", ingredients: ["pasta", "tomatoes", "garlic", "basil"] },
-  { name: "4 ingredients (specific)", ingredients: ["chocolate", "cream", "vanilla", "sugar"] }
+  { name: "4 ingredients (complex)", ingredients: [ "flour", "eggs", "milk", "butter" ] },
+  { name: "4 ingredients (dinner)", ingredients: [ "pasta", "tomatoes", "garlic", "basil" ] },
+  { name: "4 ingredients (specific)", ingredients: [ "chocolate", "cream", "vanilla", "sugar" ] }
 ]
 
 results = []
@@ -86,7 +86,7 @@ puts "📈 PERFORMANCE SUMMARY BY NUMBER OF INGREDIENTS"
 puts "=" * 60
 puts ""
 
-[1, 2, 3, 4].each do |num_ingredients|
+[ 1, 2, 3, 4 ].each do |num_ingredients|
   ingredient_results = results.select { |r| r[:query].split.length == num_ingredients }
 
   if ingredient_results.any?
